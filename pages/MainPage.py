@@ -62,7 +62,7 @@ if(logged_in()):
         st.session_state.radio_bar = selected_convo
 
     # Create a bucket for file uploading
-    #bucket = storage.bucket()
+    bucket = storage.bucket("myslack-9f623.appspot.com")
 
     # Creating form -> main panel of application
     with st.form("send_msg", clear_on_submit = True):
@@ -83,10 +83,10 @@ if(logged_in()):
         collection_ref = db.collection(selected_convo)
         documents = collection_ref.order_by("timestamp", direction=firestore.Query.DESCENDING).get()
 
-        # Cycle through each document and display its data
-        for document in documents:
-            document_data = document.to_dict()
-            st.write("[" + document_data['sender_name'] + "] " + document_data['message'] + " [" + document_data['timestamp'] + "]\n")
+        # Cycle through each document and display its data  --MOVED AT THE END
+        # for document in documents:
+        #    document_data = document.to_dict()
+        #    st.write("[" + document_data['sender_name'] + "] " + document_data['message'] + " [" + document_data['timestamp'] + "]\n")
             
         # On button click do
         if send_btn:
@@ -100,7 +100,7 @@ if(logged_in()):
 
                 # Create dictionary to store message data
                 # | _messaggio_ | mittente | timestamp |
-                timestamp = time.strftime("%d/%m/%Y - %H:%M:%S")
+                timestamp = time.strftime("%Y/%m/%d - %H:%M:%S")
                 message_data = {
                     "message":user_input,
                     "sender_name":"altroNome",
@@ -109,13 +109,42 @@ if(logged_in()):
 
                 # Add the message to the firestore collection
                 collection_ref = db.collection(selected_convo)
-                docName = "msg" + time.strftime("%d:%m:%Y - ") + time.strftime("%H:%M:%S")
+                docName = "msg" + time.strftime("%Y:%m:%d - ") + time.strftime("%H:%M:%S")
                 collection_ref.document(docName).set(message_data)
 
-            #else:
-                #blob = bucket.blob(uploaded_file.name)
-                #blob.upload_from_string(uploaded_file.read())
-                #st.success("File uploaded successfully")
+            else:
+                blob = bucket.blob(uploaded_file.name)
+                blob.upload_from_string(uploaded_file.read())
+
+                new_message = "Uploaded the file: " + uploaded_file.name
+                message = new_message
+                new_message += " [" + time.strftime("%H:%M") + time.strftime(" - %d/%m/%Y") + "]\n"
+                st.write(new_message, "\n")
+
+                timestamp = time.strftime("%Y%m%d - %H:%M:%S")
+                #timestamp = time.strftime("%Y:%m:%d:%H:%M:%S")
+                message_data = {
+                    "message":message,
+                    "sender_name":"altroNome",
+                    "timestamp":timestamp
+                }
+
+                collection_ref = db.collection(selected_convo)
+                docName = "msg" + time.strftime("%Y:%m:%d - ") + time.strftime("%H:%M:%S")
+                collection_ref.document(docName).set(message_data)
+
+                st.success("File uploaded successfully")
+
+            st.experimental_rerun()
+
+    # Display della chat
+    st.markdown("""---""")
+    collection_ref = db.collection(selected_convo)
+    documents = collection_ref.order_by("timestamp", direction=firestore.Query.DESCENDING).get()
+    for document in documents:
+            document_data = document.to_dict()
+            st.write("[" + document_data['sender_name'] + "] " + document_data['message'] + " [" + document_data['timestamp'] + "]\n")
+         
 
     # Add button to clear chat log
     clear_log_btn = st.button("Clear Log")
