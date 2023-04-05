@@ -44,10 +44,10 @@ def admin_already_registered(username):
 
 # Manage logged in and admin status
 if 'logged_in' not in st.session_state:
-    st.session_state['logged_in'] = False
+    st.session_state['logged_in'] = [False, False]
 
 def logged_in():
-    if(st.session_state.logged_in == False):
+    if(st.session_state.logged_in[0] == False):
         st.header("Sign In")
         username = st.text_input("Username")
         password = st.text_input("Password", type="password")
@@ -59,13 +59,13 @@ def logged_in():
                 doc_dict = doc.to_dict()
                 if username == doc_dict["username"] and password == doc_dict["password"]:
                     st.success("Successfully logged in")
-                    st.session_state.logged_in = True
-                    #if(doc_dict["isAdmin"] == "True"): 
-                        #st.session_state.logged_in[1] = True
+                    st.session_state.logged_in[0] = True
+                    if(doc_dict["isAdmin"] == "True"): 
+                        st.session_state.logged_in[1] = True
             if(not st.session_state.logged_in): st.error("Username or password not correct")
     return st.session_state['logged_in']
      
-if(not st.session_state.logged_in):
+if(not st.session_state.logged_in[0]):
     # Set up the UI
     choice = st.sidebar.selectbox("Gain Access", ["Sign In", "Sign Up"])
 
