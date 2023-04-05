@@ -83,11 +83,6 @@ if(logged_in()):
         collection_ref = db.collection(selected_convo)
         documents = collection_ref.order_by("timestamp", direction=firestore.Query.DESCENDING).get()
 
-        # Cycle through each document and display its data  --MOVED AT THE END
-        # for document in documents:
-        #    document_data = document.to_dict()
-        #    st.write("[" + document_data['sender_name'] + "] " + document_data['message'] + " [" + document_data['timestamp'] + "]\n")
-            
         # On button click do
         if send_btn:
             # Check for errors
@@ -109,7 +104,7 @@ if(logged_in()):
 
                 # Add the message to the firestore collection
                 collection_ref = db.collection(selected_convo)
-                docName = "msg" + time.strftime("%Y:%m:%d - ") + time.strftime("%H:%M:%S")
+                docName = "msg" + time.strftime("%Y/%m/%d - ") + time.strftime("%H:%M:%S")
                 collection_ref.document(docName).set(message_data)
 
             else:
@@ -121,7 +116,7 @@ if(logged_in()):
                 new_message += " [" + time.strftime("%H:%M") + time.strftime(" - %d/%m/%Y") + "]\n"
                 st.write(new_message, "\n")
 
-                timestamp = time.strftime("%Y%m%d - %H:%M:%S")
+                timestamp = time.strftime("%Y/%m/%d - %H:%M:%S")
                 #timestamp = time.strftime("%Y:%m:%d:%H:%M:%S")
                 message_data = {
                     "message":message,
@@ -138,19 +133,13 @@ if(logged_in()):
             st.experimental_rerun()
 
     # Display della chat
-    st.markdown("""---""")
-    collection_ref = db.collection(selected_convo)
-    documents = collection_ref.order_by("timestamp", direction=firestore.Query.DESCENDING).get()
-    for document in documents:
-            document_data = document.to_dict()
-            st.write("[" + document_data['sender_name'] + "] " + document_data['message'] + " [" + document_data['timestamp'] + "]\n")
-         
-
-    # Add button to clear chat log
-    clear_log_btn = st.button("Clear Log")
-    if clear_log_btn:
-        st.session_state.chat_log[selected_convo] = ''
-        st.experimental_rerun()
+    with st.form("displayChat"):
+        clear_btn = st.form_submit_button("Clear", disabled=True)
+        collection_ref = db.collection(selected_convo)
+        documents = collection_ref.order_by("timestamp", direction=firestore.Query.DESCENDING).get()
+        for document in documents:
+                document_data = document.to_dict()
+                st.write("[" + document_data['sender_name'] + "] " + document_data['message'] + " [" + document_data['timestamp'] + "]\n")
 
 else:
     st.header("Sign In to visualize your Home Page")
