@@ -3,20 +3,6 @@ from firebase_admin import credentials, firestore, storage
 import streamlit as st
 from Access import logged_in
 
-# Libraries for accessing the bucket's contents
-from google.oauth2.credentials import Credentials
-import google.auth
-from google.cloud import storage as gcs
-import os
-import urllib.request
-from datetime import datetime, timedelta
-
-def download_file(filename):
-    bucket = storage.bucket('myslack-9f623.appspot.com')
-    blob = bucket.blob(filename)
-    url = blob.generate_signed_url(timedelta(seconds=300), method='GET')
-    urllib.request.urlretrieve(url, filename)
-
 if(logged_in()):
     
     # Access the database
