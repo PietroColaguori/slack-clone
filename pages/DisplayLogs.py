@@ -2,7 +2,7 @@ import streamlit as st
 import time
 from Access import logged_in
 
-if(logged_in()):
+if(logged_in()[0]):
 
     #  Packets to enable firebase DB manipulation  ---
     import firebase_admin
