@@ -3,7 +3,7 @@ from firebase_admin import credentials, firestore, storage
 import streamlit as st
 from Access import logged_in
 
-if(logged_in()):
+if(logged_in()[0]):
     
     # Access the database
     if not firebase_admin._apps:
