@@ -3,7 +3,7 @@ from firebase_admin import credentials, firestore
 import streamlit as st
 from Access import logged_in
 
-if(logged_in()):
+if(logged_in()[1]):
 
     # Get Firebase app and Firestore client
     firebase_app = firebase_admin.get_app()
