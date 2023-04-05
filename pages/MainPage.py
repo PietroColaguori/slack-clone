@@ -21,7 +21,7 @@ db = firestore.client()
 # Title of Page
 st.title("Slack Clone")
 
-if(logged_in()):
+if(logged_in()[0]):
 
     # Application header
     st.header("Welcome, Pietro")
