@@ -19,9 +19,7 @@ if(logged_in()[1]):
             docName = "Dummy"
             initial_data = {"dummy":"dummy"}
             new_collection_ref.document(docName).set(initial_data)
-            st.success("New channel " + new_channel + " created!")
-
-            st.experimental_rerun()
+            st.success("New channel " + new_channel + " created! Go to Access and press CTRL+R to load changes!")
 
     # Implement DELETE CHANNEL
     target_channel = st.text_input("Channel you want to delete [!]")
@@ -37,9 +35,7 @@ if(logged_in()[1]):
 
             # st.session_state.collections.remove(target_channel) !!!
 
-            st.success("Channel " + target_channel + " deleted!")
-
-            st.experimental_rerun()
+            st.success("Channel " + target_channel + " deleted! Go to Access and press CTRL+R to load changes!")
 
 else:
     st.header("Only the Admin can access this page!")
