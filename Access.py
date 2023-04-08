@@ -68,7 +68,7 @@ def logged_in():
      
 if(not st.session_state.logged_in[0]):
     # Set up the UI
-    choice = st.sidebar.selectbox("Gain Access", ["Sign In", "Sign Up"])
+    choice = st.selectbox("Gain Access", ["Sign In", "Sign Up"])
 
     if(choice == "Sign In"):
         logged_in()
